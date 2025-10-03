@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRCTC Next Generation eTicketing System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="container flex items-center justify-between">
+            <div class="logo">
+                <h2>IRCTC</h2>
+                <span>Indian Railway</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#" class="nav-link active" data-page="home">Home</a>
+                <a href="#" class="nav-link" data-page="search">Search Trains</a>
+                <a href="#" class="nav-link" data-page="bookings">My Bookings</a>
+                <button class="btn btn--primary" id="loginBtn">Login / Register</button>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        </nav>
+    </header>
+
+    <!-- Home Page -->
+    <main class="page active" id="home">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Book Your Train Tickets</h1>
+                    <p>Experience hassle-free train booking with IRCTC Next Generation eTicketing System</p>
+                    
+                    <!-- Search Form -->
+                    <div class="search-form-container">
+                        <form class="search-form" id="trainSearchForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">From</label>
+                                    <input type="text" class="form-control" id="fromStation" placeholder="Enter source station" required>
+                                    <div class="autocomplete-dropdown" id="fromDropdown"></div>
+                                </div>
+                                <button type="button" class="swap-btn" id="swapStations">⇄</button>
+                                <div class="form-group">
+                                    <label class="form-label">To</label>
+                                    <input type="text" class="form-control" id="toStation" placeholder="Enter destination station" required>
+                                    <div class="autocomplete-dropdown" id="toDropdown"></div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Journey Date</label>
+                                    <input type="date" class="form-control" id="journeyDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Class</label>
+                                    <select class="form-control" id="travelClass">
+                                        <option value="SL">Sleeper (SL)</option>
+                                        <option value="3AC">AC 3 Tier (3AC)</option>
+                                        <option value="2AC">AC 2 Tier (2AC)</option>
+                                        <option value="1AC">AC 1 Tier (1AC)</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn--primary search-btn">
+                                    <span class="btn-text">Search Trains</span>
+                                    <span class="loading-spinner hidden">Searching...</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Routes -->
+        <section class="popular-routes">
+            <div class="container">
+                <h3>Popular Routes</h3>
+                <div class="routes-grid" id="popularRoutes"></div>
+            </div>
+        </section>
+
+        <!-- Featured Services -->
+        <section class="featured-services">
+            <div class="container">
+                <h3>Our Services</h3>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h4>Book Tickets</h4>
+                        <p>Quick and easy train ticket booking</p>
+                    </div>
+                    <div class="service-card">
+                        <h4>Check PNR Status</h4>
+                        <p>Real-time PNR status and seat confirmation</p>
+                    </div>
+                    <div class="service-card">
+                        <h4>Cancel Tickets</h4>
+                        <p>Cancel your tickets with instant refund</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Search Results Page -->
+    <main class="page" id="search">
+        <section class="search-results">
+            <div class="container">
+                <div class="search-header">
+                    <h2>Available Trains</h2>
+                    <div class="search-summary" id="searchSummary"></div>
+                    <button class="btn btn--outline modify-search-btn" id="modifySearch">Modify Search</button>
+                </div>
+                
+                <div class="results-container">
+                    <div class="filters-panel">
+                        <h4>Filters</h4>
+                        <div class="filter-group">
+                            <h6>Departure Time</h6>
+                            <label><input type="checkbox" value="morning"> Morning (6AM - 12PM)</label>
+                            <label><input type="checkbox" value="afternoon"> Afternoon (12PM - 6PM)</label>
+                            <label><input type="checkbox" value="evening"> Evening (6PM - 12AM)</label>
+                            <label><input type="checkbox" value="night"> Night (12AM - 6AM)</label>
+                        </div>
+                        <div class="filter-group">
+                            <h6>Train Type</h6>
+                            <label><input type="checkbox" value="rajdhani"> Rajdhani</label>
+                            <label><input type="checkbox" value="express"> Express</label>
+                            <label><input type="checkbox" value="mail"> Mail</label>
+                        </div>
+                    </div>
+                    
+                    <div class="trains-list" id="trainsList">
+                        <!-- Train results will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Booking Page -->
+    <main class="page" id="booking">
+        <section class="booking-section">
+            <div class="container">
+                <div class="booking-header">
+                    <h2>Book Your Ticket</h2>
+                    <div class="train-summary" id="trainSummary"></div>
+                </div>
+                
+                <form class="booking-form" id="bookingForm">
+                    <div class="passenger-details">
+                        <h4>Passenger Details</h4>
+                        <div class="passenger-form" id="passengerForm">
+                            <div class="passenger-row">
+                                <div class="form-group">
+                                    <label class="form-label">Name *</label>
+                                    <input type="text" class="form-control" name="passengerName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Age *</label>
+                                    <input type="number" class="form-control" name="passengerAge" min="1" max="120" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Gender *</label>
+                                    <select class="form-control" name="passengerGender" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Berth Preference</label>
+                                    <select class="form-control" name="berthPreference">
+                                        <option value="">No Preference</option>
+                                        <option value="Lower">Lower</option>
+                                        <option value="Middle">Middle</option>
+                                        <option value="Upper">Upper</option>
+                                        <option value="Side Lower">Side Lower</option>
+                                        <option value="Side Upper">Side Upper</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn--outline add-passenger-btn" id="addPassenger">+ Add Another Passenger</button>
+                    </div>
+                    
+                    <div class="contact-details">
+                        <h4>Contact Details</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Mobile Number *</label>
+                                <input type="tel" class="form-control" id="contactMobile" pattern="[0-9]{10}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="contactEmail" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-section">
+                        <h4>Payment Options</h4>
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="netbanking" required>
+                                <span>Net Banking</span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="card" required>
+                                <span>Credit/Debit Card</span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="upi" required>
+                                <span>UPI</span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="wallet" required>
+                                <span>Digital Wallet</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="booking-summary">
+                        <div class="fare-breakdown" id="fareBreakdown"></div>
+                        <label class="terms-checkbox">
+                            <input type="checkbox" required>
+                            <span>I agree to the <a href="#" target="_blank">Terms and Conditions</a></span>
+                        </label>
+                        <button type="submit" class="btn btn--primary book-ticket-btn">
+                            <span class="btn-text">Book Ticket</span>
+                            <span class="loading-spinner hidden">Processing...</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- My Bookings Page -->
+    <main class="page" id="bookings">
+        <section class="bookings-section">
+            <div class="container">
+                <h2>My Bookings</h2>
+                <div class="bookings-list" id="bookingsList">
+                    <!-- Bookings will be populated here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login/Registration Modal -->
+    <div class="modal hidden" id="loginModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Login</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Login Form -->
+                <form class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email/Username</label>
+                        <input type="text" class="form-control" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="loginPassword" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width">Login</button>
+                </form>
+                
+                <!-- Registration Form -->
+                <form class="register-form hidden" id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="registerPhone" pattern="[0-9]{10}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width">Register</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <p class="toggle-form">
+                    <span id="toggleText">Don't have an account?</span>
+                    <a href="#" id="toggleForm">Register here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticket Details Modal -->
+    <div class="modal hidden" id="ticketModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content ticket-modal">
+            <div class="modal-header">
+                <h3>Ticket Details</h3>
+                <button class="modal-close" id="closeTicketModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="ticket-details" id="ticketDetails">
+                    <!-- Ticket details will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--outline" id="printTicket">Print Ticket</button>
+                <button class="btn btn--secondary" id="cancelTicket">Cancel Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="toast hidden" id="successToast">
+        <div class="toast-content">
+            <span class="toast-message"></span>
+            <button class="toast-close">&times;</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h5>Contact Us</h5>
+                    <p>Phone: 139 (Railway Enquiry)</p>
+                    <p>Email: support@irctc.co.in</p>
+                </div>
+                <div class="footer-section">
+                    <h5>Quick Links</h5>
+                    <a href="#">FAQ</a>
+                    <a href="#">Contact Us</a>
+                    <a href="#">Terms & Conditions</a>
+                </div>
+                <div class="footer-section">
+                    <h5>Follow Us</h5>
+                    <p>Stay connected with IRCTC</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Indian Railway Catering and Tourism Corporation Ltd. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
