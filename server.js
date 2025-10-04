@@ -5,7 +5,7 @@ const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000 || process.env.NEXT_LINK;
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
